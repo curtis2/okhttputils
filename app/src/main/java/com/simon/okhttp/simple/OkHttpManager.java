@@ -1,4 +1,4 @@
-package com.simon.okhttp;
+package com.simon.okhttp.simple;
 
 import android.os.Handler;
 
@@ -25,25 +25,26 @@ import okhttp3.Response;
  * 初步封装okHttp的使用
  * 单元测试
  */
-public class OkHttpUtils {
+public class OkHttpManager {
+
     public static final MediaType JSON= MediaType.parse("application/json; charset=utf-8");
     //单例模式
-    private static OkHttpUtils mInstance;
+    private static OkHttpManager mInstance;
     private OkHttpClient mOkHttpClient;
     private Handler mDelivery;
     private Gson mGson;
 
-    private OkHttpUtils(){
+    private OkHttpManager(){
         mOkHttpClient=new OkHttpClient();
 //        mDelivery=new Handler(Looper.getMainLooper());
         mGson=new Gson();
     }
 
-    public static OkHttpUtils getmInstance(){
+    public static OkHttpManager getmInstance(){
          if(mInstance==null){
-             synchronized (OkHttpUtils.class){
+             synchronized (OkHttpManager.class){
                  if(mInstance==null){
-                     mInstance=new OkHttpUtils();
+                     mInstance=new OkHttpManager();
                  }
              }
          }

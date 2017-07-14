@@ -1,4 +1,4 @@
-package com.simon.okhttp;
+package com.simon.okhttp.simple;
 
 import java.io.IOException;
 
@@ -28,7 +28,7 @@ public class TestOkhttp {
     }
 
     static void testOkHttpUtilGet() throws IOException {
-        OkHttpUtils.getmInstance()._getAsync(getUrl, new OkHttpUtils.ResultCall<String>(){
+        OkHttpManager.getmInstance()._getAsync(getUrl, new OkHttpManager.ResultCall<String>(){
             @Override
             public void onError(Request request, Exception e) {
 
@@ -42,7 +42,7 @@ public class TestOkhttp {
 
     static void testpostJson() throws IOException {
         String json="{\"isOk\":false}";
-        OkHttpUtils.getmInstance()._postAsynJson(postJsonUrl, new OkHttpUtils.ResultCall<String>(){
+        OkHttpManager.getmInstance()._postAsynJson(postJsonUrl, new OkHttpManager.ResultCall<String>(){
             @Override
             public void onError(Request request, Exception e) {
             }
