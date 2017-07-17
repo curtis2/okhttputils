@@ -1,7 +1,5 @@
 package com.simon.okhttp.request;
 
-import java.util.Map;
-
 import okhttp3.Request;
 import okhttp3.RequestBody;
 
@@ -12,8 +10,8 @@ import okhttp3.RequestBody;
 
 public class GetRequest extends OkHttpRequest {
 
-    public GetRequest(int id, String tag, String url, Map<String, String> headers, Map<String, String> params) {
-        super(id, tag, url, headers, params);
+    public GetRequest(String url) {
+        super(url);
     }
 
     @Override
@@ -22,8 +20,9 @@ public class GetRequest extends OkHttpRequest {
     }
 
     @Override
-    protected Request builderRequest() {
-        return builder.get().build();
+    protected Request builderRequest(RequestBody requestBody) {
+        return builder.url(url).get().build();
     }
+
 
 }

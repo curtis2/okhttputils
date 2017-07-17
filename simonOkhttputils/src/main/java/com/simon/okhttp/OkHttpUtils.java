@@ -1,7 +1,7 @@
 package com.simon.okhttp;
 
-import com.simon.okhttp.builder.GetBulider;
 import com.simon.okhttp.callback.Callback;
+import com.simon.okhttp.request.GetRequest;
 import com.simon.okhttp.request.RequestCall;
 import com.simon.okhttp.utils.Platform;
 
@@ -18,11 +18,10 @@ import okhttp3.Response;
 public class OkHttpUtils {
     private OkHttpClient okhttpClient;
     private static OkHttpUtils mInstance;
-
     Platform platform;
 
-    public static GetBulider get(){
-        return new GetBulider();
+    public static GetRequest get(String url){
+        return new GetRequest(url);
     }
 
     public OkHttpUtils(OkHttpClient okhttpClient) {

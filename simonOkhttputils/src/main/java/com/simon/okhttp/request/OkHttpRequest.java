@@ -2,6 +2,7 @@ package com.simon.okhttp.request;
 
 import com.simon.okhttp.callback.Callback;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.Headers;
@@ -12,7 +13,8 @@ import okhttp3.RequestBody;
  * auther: elliott zhang
  * Emaill:18292967668@163.com
  */
-public abstract class OkHttpRequest{
+public abstract class OkHttpRequest <T extends OkHttpRequest>{
+
     protected int id;
     protected String tag;
     protected String url;
@@ -20,28 +22,51 @@ public abstract class OkHttpRequest{
     protected Map<String,String> params;
     Request.Builder builder=new Request.Builder();
 
-    public OkHttpRequest(int id, String tag, String url, Map<String, String> headers, Map<String, String> params) {
-        this.id = id;
-        this.tag = tag;
-        this.url = url;
-        this.headers = headers;
-        this.params = params;
-        initBuilder();
+    public OkHttpRequest(String url) {
+        this.url=url;
     }
 
-    protected  void initBuilder(){
-        builder.url(url).tag(tag);
-        appendHeaders();
+    public T headers(Map<String, String> headers) {
+        this.headers = headers;
+        return (T)this;
+    }
+
+    public T addHeaders(String key,String value) {
+        if(headers==null){
+            headers=new HashMap<>();
+        }
+        headers.put(key,value);
+        return (T)this;
+    }
+
+    public T params(Map<String, String> headers) {
+        this.params = headers;
+        return (T)this;
+    }
+
+
+    public T id(int id) {
+        this.id = id;
+        return (T)this;
+    }
+
+    public T tag(String tag) {
+        this.tag = tag;
+        return (T)this;
+    }
+
+    public int getId() {
+        return id;
     }
 
     protected void appendHeaders(){
         Headers.Builder HeadersBuilder=new Headers.Builder();
         if(headers==null||headers.isEmpty())return;
 
-         for(String key:headers.keySet()){
-           HeadersBuilder.add(key,headers.get(key));
-         }
-         builder .headers(HeadersBuilder.build());
+        for(String key:headers.keySet()){
+            HeadersBuilder.add(key,headers.get(key));
+        }
+        builder.headers(HeadersBuilder.build());
     }
 
 
@@ -51,17 +76,14 @@ public abstract class OkHttpRequest{
         return requestBody;
     }
 
-    protected abstract Request builderRequest();
+    protected abstract Request builderRequest(RequestBody wrapedRequestBody);
 
     protected Request generateRequest(Callback callback){
+        appendHeaders();
         RequestBody requestBody=builderRequestBody();
         RequestBody wrappedRequestBody=wrapedRequestBody(requestBody,callback);
-        Request request=builderRequest();
+        Request request=builderRequest(wrappedRequestBody);
         return request;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public RequestCall build(){

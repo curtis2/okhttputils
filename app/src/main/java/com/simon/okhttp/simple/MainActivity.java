@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void getStringRequest(View v){
         String url="https://www.baidu.com/";
-        OkHttpUtils.get().url(url).build().execute(new StringCallback() {
+        OkHttpUtils.get(url).build().execute(new StringCallback() {
             @Override
             public String onResponse(String response, int id) {
                 contentTv.setText(response);
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         Map<String,String> params=new HashMap<>();
         params.put("p","aa");
         params.put("k","bb");
-        OkHttpUtils.get().url(url).params(params).build().execute(new StringCallback() {
+        OkHttpUtils.get(url).params(params).build().execute(new StringCallback() {
             @Override
             public String onResponse(String response, int id) {
                 contentTv.setText(response);
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void postJson(View v){
         String url="https://www.baidu.com/";
-        OkHttpUtils.get().url(url).build().execute(new StringCallback() {
+        OkHttpUtils.get(url).build().execute(new StringCallback() {
             @Override
             public String onResponse(String response, int id) {
                 contentTv.setText(response);
