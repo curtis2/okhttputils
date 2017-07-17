@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/OkHttp.iml" filepath="$PROJECT_DIR$/OkHttp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/httpimplement/httpimplement.iml" filepath="$PROJECT_DIR$/httpimplement/httpimplement.iml" />
-      <module fileurl="file://$PROJECT_DIR$/simonokhttputils/simonokhttputils.iml" filepath="$PROJECT_DIR$/simonokhttputils/simonokhttputils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/simonOkhttputils/simonOkhttputils.iml" filepath="$PROJECT_DIR$/simonOkhttputils/simonOkhttputils.iml" />
     </modules>
   </component>
 </project>
