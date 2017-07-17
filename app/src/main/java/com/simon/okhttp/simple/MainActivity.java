@@ -28,14 +28,13 @@ public class MainActivity extends AppCompatActivity {
      * @param v
      */
     public void getStringRequest(View v){
-        String url="https://www.baidu.com/";
+        String url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
         OkHttpUtils.get(url).build().execute(new StringCallback() {
             @Override
             public String onResponse(String response, int id) {
                 contentTv.setText(response);
                 return null;
             }
-
             @Override
             public void onError(okhttp3.Call call, Exception e, int id) {
                 contentTv.setText(e.toString());

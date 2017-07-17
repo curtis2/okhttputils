@@ -10,5 +10,4 @@ public class Exceptions
         throw new IllegalArgumentException(String.format(msg, params));
     }
 
-
 }
