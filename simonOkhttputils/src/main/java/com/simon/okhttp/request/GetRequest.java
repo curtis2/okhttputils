@@ -14,7 +14,7 @@ import okhttp3.RequestBody;
  * Emaill:18292967668@163.com
  */
 
-public class GetRequest extends OkHttpRequest {
+public class GetRequest extends OkHttpRequest<GetRequest> {
 
     public GetRequest(String url) {
         super(url);

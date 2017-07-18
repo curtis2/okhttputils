@@ -4,23 +4,34 @@ import com.simon.okhttp.callback.Callback;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
+import okhttp3.Call;
 import okhttp3.Headers;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+
+import static com.simon.okhttp.OkHttpUtils.getmInstance;
 
 /**
  * auther: elliott zhang
  * Emaill:18292967668@163.com
  */
-public abstract class OkHttpRequest <T extends OkHttpRequest>{
+public abstract class OkHttpRequest<T extends OkHttpRequest>{
+    private long readTimeOut;
+    private long whiteTimeOut;
+    private long connTimeOut;
+    public static final long DEFAULT_MILLISECONDS = 10_000L;
 
     protected int id;
     protected String tag;
     protected String url;
     protected Map<String,String> headers;
     protected Map<String,String> params;
+
     Request.Builder builder=new Request.Builder();
+    private Request request;
+    private Call call;
 
     public OkHttpRequest(String url) {
         this.url=url;
@@ -39,10 +50,18 @@ public abstract class OkHttpRequest <T extends OkHttpRequest>{
         return (T)this;
     }
 
-    public T params(Map<String, String> headers) {
-        this.params = headers;
+    public T params(Map<String, String> params) {
+        this.params = params;
         return (T)this;
     }
+
+    public T addParams(String key, String value) {
+        if(params==null){
+            params=new HashMap<>();
+        }
+        params.put(key,value);
+        return (T)this;
+}
 
 
     public T id(int id) {
@@ -52,6 +71,21 @@ public abstract class OkHttpRequest <T extends OkHttpRequest>{
 
     public T tag(String tag) {
         this.tag = tag;
+        return (T)this;
+    }
+
+    public T readTimeOut(long readTimeOut) {
+        this.readTimeOut = readTimeOut;
+        return (T)this;
+    }
+
+    public T whiteTimeOut(long whiteTimeOut) {
+        this.whiteTimeOut = whiteTimeOut;
+        return (T)this;
+    }
+
+    public T connTimeOut(long connTimeOut) {
+        this.connTimeOut = connTimeOut;
         return (T)this;
     }
 
@@ -86,8 +120,29 @@ public abstract class OkHttpRequest <T extends OkHttpRequest>{
         return request;
     }
 
-    public RequestCall build(){
-        return new RequestCall(this);
+    public void execute(Callback callback){
+        buildCall(callback);
+        if(callback!=null){
+            callback.onBefore(request,getId());
+        }
+        getmInstance().execute(this,callback);
+    }
+
+    private Call buildCall(Callback callback) {
+        request=generateRequest(callback);
+        if(readTimeOut>0||whiteTimeOut>0||connTimeOut>0){
+            call= getmInstance().getOkhttpClient().newBuilder().
+                    readTimeout(readTimeOut>0?readTimeOut:DEFAULT_MILLISECONDS, TimeUnit.SECONDS)
+                    .writeTimeout(whiteTimeOut>0?whiteTimeOut:DEFAULT_MILLISECONDS, TimeUnit.SECONDS)
+                    .connectTimeout(connTimeOut>0?connTimeOut:DEFAULT_MILLISECONDS, TimeUnit.SECONDS).build().newCall(request);
+        }else{
+            call= getmInstance().getOkhttpClient().newCall(request);
+        }
+        return call;
+    }
+
+    public Call getCall() {
+        return call;
     }
 
 }

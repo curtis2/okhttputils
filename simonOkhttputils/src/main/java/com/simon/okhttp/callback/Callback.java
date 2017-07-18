@@ -15,14 +15,18 @@ public abstract class Callback<T> {
      *请求执行之前回调
      */
     public  void onBefore(Request request, int id){
+    }
+    /**
+     *上传进度回调
+     */
+    public  void upProgress(float progress,long total , int id){
 
     }
 
     /**
      *下载进度回调
      */
-    public  void inProcess(int process,int id){
-
+    public  void downloadProgress(long currentSize, long totalSize, float progress, long networkSpeed){
     }
 
     /**

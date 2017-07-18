@@ -1,11 +1,15 @@
 package com.simon.okhttp;
 
 import com.simon.okhttp.callback.Callback;
+import com.simon.okhttp.request.DeleteRequest;
 import com.simon.okhttp.request.GetRequest;
-import com.simon.okhttp.request.RequestCall;
+import com.simon.okhttp.request.OkHttpRequest;
+import com.simon.okhttp.request.PostRequest;
+import com.simon.okhttp.request.PutRequest;
 import com.simon.okhttp.utils.Platform;
 
 import java.io.IOException;
+import java.util.concurrent.Executor;
 
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
@@ -16,19 +20,15 @@ import okhttp3.Response;
  * Emaill:18292967668@163.com
  */
 public class OkHttpUtils {
-    private OkHttpClient okhttpClient;
+    private OkHttpClient okHttpClient;
     private static OkHttpUtils mInstance;
     Platform platform;
 
-    public static GetRequest get(String url){
-        return new GetRequest(url);
-    }
-
-    public OkHttpUtils(OkHttpClient okhttpClient) {
+    private OkHttpUtils(OkHttpClient okhttpClient) {
         if(okhttpClient==null){
-            this.okhttpClient=new OkHttpClient();
+            this.okHttpClient =new OkHttpClient();
         }else{
-            this.okhttpClient=okhttpClient;
+            this.okHttpClient =okhttpClient;
         }
         platform=Platform.get();
     }
@@ -44,11 +44,12 @@ public class OkHttpUtils {
       return mInstance;
     }
 
-    public void execute(final RequestCall requestCall, Callback callback) {
+
+    public void execute(final OkHttpRequest okHttpRequest, Callback callback) {
         if(callback==null) callback=Callback.CALLBACK_DEFAULT;
         final Callback  finalCallback=callback;
-        final int id = requestCall.getOkHttpRequest().getId();
-        requestCall.getCall().enqueue(new okhttp3.Callback() {
+        final int id = okHttpRequest.getId();
+        okHttpRequest.getCall().enqueue(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                sendFaildResultCallback(call, e,finalCallback,id);
@@ -97,7 +98,28 @@ public class OkHttpUtils {
         });
     }
 
-    public OkHttpClient getOkhttpClient() {
-        return okhttpClient;
+    /**
+     * 对外暴露的方法
+     * @return
+     */
+    public OkHttpClient getOkHttpClient() {
+        return okHttpClient;
+    }
+    public static GetRequest get(String url){
+        return new GetRequest(url);
+    }
+    public static PostRequest post(String url){
+        return new PostRequest(url);
+    }
+
+    public static PutRequest put(String url){
+        return new PutRequest(url);
+    }
+    public static DeleteRequest delete(String url){
+        return new DeleteRequest(url);
+    }
+
+    public Executor getDelivery() {
+        return platform.defaultCallbackExecutor();
     }
 }
