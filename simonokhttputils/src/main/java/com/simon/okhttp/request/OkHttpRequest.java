@@ -1,5 +1,4 @@
 package com.simon.okhttp.request;
-
 import com.simon.okhttp.callback.Callback;
 
 import java.util.HashMap;
@@ -103,7 +102,6 @@ public abstract class OkHttpRequest<T extends OkHttpRequest>{
         builder.headers(HeadersBuilder.build());
     }
 
-
     protected abstract RequestBody builderRequestBody();
 
     protected  RequestBody wrapedRequestBody(RequestBody requestBody,Callback callback){
@@ -131,13 +129,15 @@ public abstract class OkHttpRequest<T extends OkHttpRequest>{
     private Call buildCall(Callback callback) {
         request=generateRequest(callback);
         if(readTimeOut>0||whiteTimeOut>0||connTimeOut>0){
-            call= getmInstance().getOkhttpClient().newBuilder().
+            call= getmInstance().getOkHttpClientBuilder().
                     readTimeout(readTimeOut>0?readTimeOut:DEFAULT_MILLISECONDS, TimeUnit.SECONDS)
                     .writeTimeout(whiteTimeOut>0?whiteTimeOut:DEFAULT_MILLISECONDS, TimeUnit.SECONDS)
-                    .connectTimeout(connTimeOut>0?connTimeOut:DEFAULT_MILLISECONDS, TimeUnit.SECONDS).build().newCall(request);
+                    .connectTimeout(connTimeOut>0?connTimeOut:DEFAULT_MILLISECONDS, TimeUnit.SECONDS)
+                    .build().newCall(request);
         }else{
-            call= getmInstance().getOkhttpClient().newCall(request);
+            call= getmInstance().getOkHttpClientBuilder().build().newCall(request);
         }
+
         return call;
     }
 

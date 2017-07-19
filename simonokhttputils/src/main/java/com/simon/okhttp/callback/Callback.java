@@ -37,7 +37,7 @@ public abstract class Callback<T> {
     }
 
     public abstract T parseResponse(Response response) throws Exception;
-    public abstract T onResponse(T response,int id);
+    public abstract void onResponse(T response,int id);
     public abstract void onError(Call call,Exception e,int id);
 
    public static Callback CALLBACK_DEFAULT=new Callback() {
@@ -47,8 +47,7 @@ public abstract class Callback<T> {
        }
 
        @Override
-       public Object onResponse(Object response, int id) {
-           return null;
+       public void onResponse(Object response, int id){
        }
 
        @Override

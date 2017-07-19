@@ -1,6 +1,11 @@
 package com.simon.okhttp;
 
+import android.app.Application;
+import android.content.Context;
+
 import com.simon.okhttp.callback.Callback;
+import com.simon.okhttp.cookie.CookieJarImpl;
+import com.simon.okhttp.cookie.store.CookieStore;
 import com.simon.okhttp.request.DeleteRequest;
 import com.simon.okhttp.request.GetRequest;
 import com.simon.okhttp.request.OkHttpRequest;
@@ -20,15 +25,26 @@ import okhttp3.Response;
  * Emaill:18292967668@163.com
  */
 public class OkHttpUtils {
-    private OkHttpClient okHttpClient;
+    private static  Context context;
     private static OkHttpUtils mInstance;
     Platform platform;
+    private OkHttpClient.Builder okHttpClientBuilder; //ok请求的客户端
+    private CookieJarImpl cookieJar;   //全局 Cookie 实例
 
-    private OkHttpUtils(OkHttpClient okhttpClient) {
-        if(okhttpClient==null){
-            this.okHttpClient =new OkHttpClient();
+    public static void init(Application app) {
+        context = app;
+    }
+
+    public static Context getContext() {
+        if (context == null) throw new IllegalStateException("请先在全局Application中调用 OkHttpUtils.init() 初始化！");
+        return context;
+    }
+
+    private OkHttpUtils(OkHttpClient.Builder okHttpClientBuilder) {
+        if(okHttpClientBuilder==null){
+            this.okHttpClientBuilder =new OkHttpClient.Builder();
         }else{
-            this.okHttpClient =okhttpClient;
+            this.okHttpClientBuilder =okHttpClientBuilder;
         }
         platform=Platform.get();
     }
@@ -98,16 +114,34 @@ public class OkHttpUtils {
         });
     }
 
+    /** 全局cookie存取规则 */
+    public OkHttpUtils setCookieStore(CookieStore cookieStore) {
+        cookieJar = new CookieJarImpl(cookieStore);
+        okHttpClientBuilder.cookieJar(cookieJar);
+        return this;
+    }
+
+    /** 获取全局的cookie实例 */
+    public CookieJarImpl getCookieJar() {
+        return cookieJar;
+    }
+
     /**
      * 对外暴露的方法
      * @return
      */
-    public OkHttpClient getOkHttpClient() {
-        return okHttpClient;
+    public OkHttpClient.Builder getOkHttpClientBuilder() {
+        return okHttpClientBuilder;
     }
+
+    private OkHttpClient getOkHttpClient() {
+        return okHttpClientBuilder.build();
+    }
+
     public static GetRequest get(String url){
         return new GetRequest(url);
     }
+
     public static PostRequest post(String url){
         return new PostRequest(url);
     }
@@ -115,11 +149,26 @@ public class OkHttpUtils {
     public static PutRequest put(String url){
         return new PutRequest(url);
     }
+
     public static DeleteRequest delete(String url){
         return new DeleteRequest(url);
     }
 
     public Executor getDelivery() {
         return platform.defaultCallbackExecutor();
+    }
+
+    /** 根据Tag取消请求 */
+    public void cancelTag(Object tag) {
+        for (Call call : getOkHttpClient().dispatcher().queuedCalls()) {
+            if (tag.equals(call.request().tag())) {
+                call.cancel();
+            }
+        }
+        for (Call call : getOkHttpClient().dispatcher().runningCalls()) {
+            if (tag.equals(call.request().tag())) {
+                call.cancel();
+            }
+        }
     }
 }

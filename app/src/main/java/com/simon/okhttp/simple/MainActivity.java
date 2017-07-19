@@ -38,22 +38,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         contentTv= (TextView) findViewById(R.id.content);
         CrashHandleUtil.getmInstance().init(this,"sample");
-
     }
 
     /**
-     * http get 请求
+     * http get 请求  （测试通过）
      * @param v
      */
     public void getStringRequest(View v){
-        String url="http://www.391k.com/api/xapi.ashx/info.json?key=bd_hyrzjjfb4modhj&size=10&page=1";
+        String url="http://rapapi.org/mockjs/22753/getString";
         OkHttpUtils
              .get(url)
              .execute(new StringCallback() {
                 @Override
-                public String onResponse(String response, int id) {
+                public void onResponse(String response, int id) {
                     contentTv.setText(response);
-                    return null;
                 }
                 @Override
                 public void onError(okhttp3.Call call, Exception e, int id) {
@@ -63,26 +61,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 携带参数的http get 请求
+     * 携带参数的http get 请求 （测试通过）
      * @param v
      */
     public void getStringWithParamsRequest(View v){
-        String url="https://www.baidu.com/";
+        String url="http://rapapi.org/mockjs/22753/getStringwithparams\n";
         Map<String,String> params=new HashMap<>();
-        params.put("p","aa");
-        params.put("k","bb");
+        params.put("userName","simon_zhang");
+        params.put("userPassword","123456");
         OkHttpUtils
                 .get(url)
                 .params(params)
                 .execute(new StringCallback() {
                    @Override
-                   public String onResponse(String response, int id) {
+                   public void onResponse(String response, int id) {
                        contentTv.setText(response);
-                       return null;
                    }
 
                    @Override
-                   public void onError(okhttp3.Call call, Exception e, int id) {
+                   public void onError(Call call, Exception e, int id) {
                        contentTv.setText(e.toString());
                    }
         });
@@ -93,11 +90,11 @@ public class MainActivity extends AppCompatActivity {
      * @param v
      */
     public void postJson(View v){
-        String url="https://www.baidu.com/";
+        String url="http://rapapi.org/mockjs/22753/postJson";
         JSONObject object=new JSONObject();
         try {
-            object.put("key",11);
-            object.put("value",22);
+            object.put("userName","simon_zhang");
+            object.put("userPassword",123456);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -106,9 +103,8 @@ public class MainActivity extends AppCompatActivity {
                 .postJson(object.toString())
                 .execute(new StringCallback() {
                      @Override
-                     public String onResponse(String response, int id) {
+                     public void onResponse(String response, int id) {
                          contentTv.setText(response);
-                         return null;
                      }
                      @Override
                      public void onError(okhttp3.Call call, Exception e, int id) {
@@ -128,9 +124,8 @@ public class MainActivity extends AppCompatActivity {
                 .postString(content)
                 .execute(new StringCallback() {
                      @Override
-                      public String onResponse(String response, int id) {
+                      public void onResponse(String response, int id) {
                           contentTv.setText(response);
-                          return null;
                       }
                       @Override
                       public void onError(okhttp3.Call call, Exception e, int id) {
@@ -151,9 +146,8 @@ public class MainActivity extends AppCompatActivity {
                 .postBytes(content.getBytes())
                 .execute(new StringCallback() {
                     @Override
-                    public String onResponse(String response, int id) {
+                    public void onResponse(String response, int id) {
                         contentTv.setText(response);
-                        return null;
                     }
                     @Override
                     public void onError(okhttp3.Call call, Exception e, int id) {
@@ -179,9 +173,8 @@ public class MainActivity extends AppCompatActivity {
                 .postFile(file)
                 .execute(new StringCallback() {
                     @Override
-                    public String onResponse(String response, int id) {
+                    public void onResponse(String response, int id) {
                         contentTv.setText(response);
-                        return null;
                     }
                     @Override
                     public void onError(okhttp3.Call call, Exception e, int id) {
@@ -202,9 +195,8 @@ public class MainActivity extends AppCompatActivity {
                 .addParams("paramskey2","paramsvalue2")
                 .execute(new StringCallback() {
                     @Override
-                    public String onResponse(String response, int id) {
+                    public void onResponse(String response, int id) {
                         contentTv.setText(response);
-                        return null;
                     }
                     @Override
                     public void onError(okhttp3.Call call, Exception e, int id) {
@@ -238,9 +230,8 @@ public class MainActivity extends AppCompatActivity {
                 .addFile("mFile", "test1.txt", file2)
                 .execute(new StringCallback() {
                     @Override
-                    public String onResponse(String response, int id) {
+                    public void onResponse(String response, int id) {
                         contentTv.setText(response);
-                        return null;
                     }
                     @Override
                     public void onError(okhttp3.Call call, Exception e, int id) {
@@ -265,8 +256,8 @@ public class MainActivity extends AppCompatActivity {
                 .get(url)
                 .execute(new FileCallback("文件夹","名称") {
                     @Override
-                    public File onResponse(File response, int id) {
-                        return null;
+                    public void onResponse(File response, int id) {
+
                     }
                     @Override
                     public void onError(Call call, Exception e, int id) {
@@ -290,8 +281,8 @@ public class MainActivity extends AppCompatActivity {
                 .get(url)
                 .execute(new BitmapCallback() {
                     @Override
-                    public Bitmap onResponse(Bitmap response, int id) {
-                        return null;
+                    public void onResponse(Bitmap response, int id) {
+
                     }
 
                     @Override
@@ -318,8 +309,7 @@ public class MainActivity extends AppCompatActivity {
                 .postFile(file)
                 .execute(new StringCallback() {
                     @Override
-                    public String onResponse(String response, int id) {
-                        return null;
+                    public void onResponse(String response, int id) {
                     }
 
                     @Override
@@ -340,8 +330,8 @@ public class MainActivity extends AppCompatActivity {
                 .delete(url)
                 .execute(new StringCallback() {
                     @Override
-                    public String onResponse(String response, int id) {
-                        return null;
+                    public void onResponse(String response, int id) {
+
                     }
 
                     @Override
@@ -352,6 +342,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static final MediaType STRING_TYPE=  MediaType.parse("text/plain;charset=utf-8");
+
     /**
      * 自定义请求
      * @param v
@@ -366,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
                 .url(url)
                 .post(body)
                 .build();
-        OkHttpUtils.getmInstance().getOkHttpClient().newCall(request).enqueue(new Callback() {
+        OkHttpUtils.getmInstance().getOkHttpClientBuilder().build().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
